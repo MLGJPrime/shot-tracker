@@ -1,0 +1,25 @@
+# Node-related (if used later)
+node_modules/
+dist/
+
+# System
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env config (for future use)
+.env
+
+# Compiled files
+*.class
+*.out
+
+# Mac OS hidden files
+.AppleDouble
+.LSOverride
