@@ -21,4 +21,4 @@ A clean and interactive web-based shot tracking tool for basketball training.
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/basketball-shot-tracker.git
+   git clone https://github.com/MLGJPrime/basketball-shot-tracker.git
