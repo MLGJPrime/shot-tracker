@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Basketball Shot Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="bg-gray-100 text-gray-900 font-sans">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-900 to-indigo-800 text-white py-6 shadow-md">
+      <div class="max-w-7xl mx-auto px-4">
+        <h1 class="text-4xl font-bold tracking-tight">🏀 Basketball Shot Tracker</h1>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Shot Input Table -->
+      <section>
+        <h2 class="text-2xl font-semibold mb-4">Today's Session</h2>
+        <div class="overflow-auto rounded-3xl shadow-lg bg-white p-6 border border-gray-200">
+          <table class="min-w-full table-auto text-sm rounded-xl overflow-hidden">
+            <thead class="bg-gray-100 text-gray-700">
+              <tr>
+                <th class="p-3 font-medium">Shot Type</th>
+                <th class="p-3 font-medium">Shot Zone</th>
+                <th class="p-3 font-medium text-center">Made</th>
+                <th class="p-3 font-medium text-center">Attempted</th>
+                <th class="p-3 font-medium text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="shotTableBody">
+              <!-- Dynamic rows go here -->
+            </tbody>
+          </table>
+          <button
+            onclick="addRow()"
+            class="mt-6 px-5 py-2.5 bg-blue-500 text-white rounded-full shadow hover:bg-blue-600 transition-all"
+          >
+            ➕ Add Shot
+          </button>
+        </div>
+      </section>
+
+      <!-- Shot Chart Placeholder -->
+      <section>
+        <h2 class="text-2xl font-semibold mb-4">Shot Chart</h2>
+        <div class="bg-white rounded-3xl shadow-lg h-96 flex items-center justify-center text-gray-400 border border-gray-200">
+          <svg viewBox="0 0 500 470" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+  <!-- Court Boundary (50 ft wide x 47 ft deep) -->
+  <rect x="0" y="0" width="500" height="470" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+
+  <!-- Paint Area (Key) - 16 ft wide x 19 ft deep = 160 x 190 px -->
+  <!-- Paint Zone -->
+  <rect x="170" y="280" width="160" height="190" fill="#dbeafe" stroke="#60a5fa" stroke-width="1.5" fill-opacity="0.4" />
+
+  <!-- Restricted Area (radius 4 ft = 40 px from hoop center) -->
+  <path d="M210,460 A40,40 0 0,1 290,460" fill="none" stroke="#3b82f6" stroke-width="1.5" fill-opacity="0.2" />
+
+  <!-- Paint Zone -->
+  <rect x="170" y="280" width="160" height="190" fill="#e0f2fe" stroke="#60a5fa" stroke-width="2" />
+
+  <!-- Free-Throw Circle (6 ft radius = 60 px) -->
+  <path d="M190,280 A60,60 0 0,1 310,280" fill="none" stroke="#60a5fa" stroke-width="2" /> <!-- solid top half -->
+  <path d="M310,280 A60,60 0 0,1 190,280" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="5 5" /> <!-- dashed bottom half -->
+
+  <!-- Backboard (6 ft wide = 60 px) and Rim (4 ft from baseline = y: 466) -->
+  <line x1="220" y1="466" x2="280" y2="466" stroke="#1e293b" stroke-width="4" /> <!-- backboard -->
+  <circle cx="250" cy="460" r="7.5" fill="#f43f5e" stroke="#1e293b" stroke-width="2" /> <!-- rim -->
+
+  <!-- Three-Point Line (Arc radius = 237.5 px, Corner = 220 px) -->
+  <!-- Corner lines -->
+  <line x1="30" y1="470" x2="30" y2="305" stroke="#94a3b8" stroke-width="2" />
+  <line x1="470" y1="470" x2="470" y2="305" stroke="#94a3b8" stroke-width="2" />
+
+  <!-- Corrected Arc -->
+  <path d="M30,305 A237.5,237.5 0 0,1 470,305" fill="none" stroke="#94a3b8" stroke-width="2" />
+  
+  <!-- Restricted Area (4 ft radius = 40 px) -->
+  <circle cx="250" cy="460" r="40" fill="#bae6fd" stroke="#0ea5e9" stroke-width="2" opacity="0.7" />
+
+  <!-- Non-Restricted Paint (inside key but outside circle) -->
+  <rect x="170" y="320" width="160" height="120" fill="#dbeafe" opacity="0.4" />
+
+  <!-- Elbow Zones -->
+  <circle id="zone-left-elbow" cx="170" cy="280" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+  <circle id="zone-right-elbow" cx="330" cy="280" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Post Zones -->
+  <circle id="zone-left-post" cx="170" cy="400" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+  <circle id="zone-right-post" cx="330" cy="400" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Free Throw Zone -->
+  <circle id="zone-free-throw" cx="250" cy="280" r="30" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Top of Key Zone -->
+  <circle id="zone-top-key" cx="250" cy="210" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Short Corner Zones -->
+  <circle id="zone-left-short-corner" cx="90" cy="420" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+  <circle id="zone-right-short-corner" cx="410" cy="420" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Short Wing Zones -->
+  <circle id="left-short-wing" cx="90" cy="300" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+  <circle id="right-short-wing" cx="410" cy="300" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Downtown Zone -->
+  <circle id="zone-downtown" cx="250" cy="120" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Corner Zones -->
+  <circle id="zone-left-corner" cx="10" cy="400" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+  <circle id="zone-right-corner" cx="490" cy="400" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Wing Zones -->
+  <circle id="left-wing" cx="30" cy="230" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+  <circle id="right-short-wing" cx="470" cy="230" r="40" fill="#60a5fa" stroke="#3b82f6" stroke-width="1" opacity="0.4" />
+
+  <!-- Baseline (bottom court edge) -->
+  <line x1="0" y1="470" x2="500" y2="470" stroke="#334155" stroke-width="2" />
+</svg>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 border-t mt-16 py-5 text-center text-sm text-gray-600">
+      <div>Basketball Shot Tracker &copy; 2025 | Built for personal skill improvement</div>
+    </footer>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+  </body>
+</html>
