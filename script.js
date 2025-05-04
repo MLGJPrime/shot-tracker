@@ -84,8 +84,32 @@ function calculateFG() {
 }
 
 function fgToColor(fg) {
-  const r = Math.round(255 * fg);
-  const g = Math.round(100 * (1 - fg));
-  const b = Math.round(250 * (1 - fg));
+  let r = 0, g = 0, b = 0;
+  if (fg <= 0.25) {
+    // Blue to green
+    const t = fg / 0.25;
+    r = Math.round(96 + (16 * t));
+    g = Math.round(165 + (90 * t));
+    b = Math.round(250 - (90 * t));
+  } else if (fg <= 0.5) {
+    // Green to yellow
+    const t = (fg - 0.25) / 0.25;
+    r = Math.round(112 + (138 * t));
+    g = Math.round(255 - (65 * t));
+    b = Math.round(160 - (160 * t));
+  } else if (fg <= 0.75) {
+    // Yellow to orange
+    const t = (fg - 0.5) / 0.25;
+    r = 250;
+    g = Math.round(190 - (120 * t));
+    b = 0;
+  } else {
+    // Orange to red
+    const t = (fg - 0.75) / 0.25;
+    r = 250;
+    g = Math.round(70 - (70 * t));
+    b = 0;
+  }
   return `rgba(${r},${g},${b},0.6)`;
+
 }
